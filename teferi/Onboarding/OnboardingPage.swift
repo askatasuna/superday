@@ -8,7 +8,7 @@ class OnboardingPage : UIViewController
     private(set) var settingsService : SettingsService!
     private(set) var notificationAuthorizationObservable : Observable<Bool>!
     
-    private var onboardingPageViewController : OnboardingPageViewController!
+    private(set) var onboardingPageViewController : OnboardingPageViewController!
     
     init?(coder aDecoder: NSCoder, nextButtonText: String?)
     {
@@ -31,7 +31,7 @@ class OnboardingPage : UIViewController
         self.notificationAuthorizationObservable = notificationAuthorizationObservable
     }
     
-    override func viewDidAppear(_ animated: Bool)
+    func onAppear()
     {
         guard !self.didAppear else { return }
         self.didAppear = true

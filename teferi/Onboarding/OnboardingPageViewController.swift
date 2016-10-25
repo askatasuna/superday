@@ -2,12 +2,13 @@ import UIKit
 import RxSwift
 import SnapKit
 
-class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate
+class OnboardingPageViewController: UIViewController
 {
     //MARK: Fields
-    private lazy var pages : [OnboardingPage] = { return (1...4).map { i in self.page("\(i)") } } ()
+    fileprivate lazy var pages : [OnboardingPage] = { return (1...4).map { i in self.page("\(i)") } } ()
     
     private var launchAnim : LaunchAnimationView!
+    fileprivate let scrollView = UIScrollView()
     
     @IBOutlet var pager: OnboardingPager!
     
@@ -15,18 +16,29 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     private var mainViewController : MainViewController!
     private var notificationUpdateObservable : Observable<Bool>!
     
+    fileprivate var currentPageIndex = 0
+    
+    var allowsSwipe = true {
+        didSet {
+            self.scrollView.isUserInteractionEnabled = allowsSwipe
+        }
+    }
+    
     //MARK: ViewController lifecycle
     override func viewDidLoad()
     {
         super.viewDidLoad()
 
-        self.dataSource = self
-        self.delegate = self
         self.view.backgroundColor = UIColor.white
-        self.setViewControllers([pages.first!],
-                           direction: .forward,
-                           animated: true,
-                           completion: nil)
+        
+        
+        scrollView.delegate = self
+        scrollView.isPagingEnabled = true
+        view.addSubview(scrollView)
+        
+        scrollView.snp.makeConstraints { (make) in
+            make.left.right.top.bottom.equalToSuperview()
+        }
         
         let pageControl = UIPageControl.appearance(whenContainedInInstancesOf: [type(of: self)])
         pageControl.pageIndicatorTintColor = UIColor.green.withAlphaComponent(0.4)
@@ -44,6 +56,11 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         self.launchAnim = LaunchAnimationView(frame: self.view.bounds)
         self.view.addSubview(self.launchAnim)
         self.startLaunchAnimation()
+        
+        self.setupPages()
+        
+        
+        self.pages.first!.onAppear()
     }
     
     //MARK: Actions
@@ -77,22 +94,39 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     
     func goToNextPage()
     {
-        let currentPageIndex = self.index(of: self.viewControllers!.first!)!
-        guard let nextPage = self.pageAt(index: currentPageIndex + 1) else
+        
+        guard let _ = self.pageAt(index: currentPageIndex + 1) else
         {
             self.settingsService.setInstallDate(Date())
             self.present(self.mainViewController, animated: false)
             return
         }
-        
-        self.setViewControllers([nextPage],
-                                direction: .forward,
-                                animated: true,
-                                completion: nil)
-        self.onNew(page: nextPage)
+        self.scrollView.setContentOffset(self.contentOffset(for: self.currentPageIndex + 1),
+                                         animated: true)
     }
     
-    private func pageAt(index : Int) -> OnboardingPage?
+    private func setupPages() {
+        var lastView: UIView? = nil
+        
+        for page in self.pages {
+            self.installViewController(childViewController: page, inside: scrollView)
+            page.view.snp.makeConstraints({ (make) in
+                make.top.equalToSuperview()
+                make.leading.equalTo(lastView != nil ? lastView!.snp.trailing : scrollView.snp.leading)
+                make.height.width.equalToSuperview()
+            })
+            lastView = page.view
+        }
+        lastView!.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview()
+        }
+    }
+    
+    private func contentOffset(for pageIndex: NSInteger) -> CGPoint {
+        return CGPoint(x: self.scrollView.frame.width.multiplied(by: CGFloat(pageIndex)), y: 0)
+    }
+
+    fileprivate func pageAt(index : Int) -> OnboardingPage?
     {
         return 0..<self.pages.count ~= index ? self.pages[index] : nil
     }
@@ -112,7 +146,7 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         return page
     }
     
-    private func onNew(page: OnboardingPage)
+    fileprivate func onNew(page: OnboardingPage)
     {
         if let buttonText = page.nextButtonText
         {
@@ -124,45 +158,26 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         }
         self.pager.switchPage(to: self.index(of: page)!)
     }
-    
-    // MARK: UIPageViewControllerDelegate
-    
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController])
+}
+
+extension OnboardingPageViewController: UIScrollViewDelegate {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
-        let page = pendingViewControllers.first as! OnboardingPage
-        
-        if page.nextButtonText != nil
-        {
-            self.pager.clearButtonText()
+        self.onScrollFinished(with: targetContentOffset.pointee)
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        self.onScrollFinished(with: scrollView.contentOffset)
+    }
+    
+    private func onScrollFinished(with contentOffset: CGPoint) {
+        self.currentPageIndex = Int(contentOffset.x.divided(by: scrollView.frame.width))
+        print(self.currentPageIndex)
+        if let page = self.pageAt(index: self.currentPageIndex) {
+            page.onAppear()
+            self.onNew(page: page)
         }
-        else
-        {
-            self.pager.hideNextButton()
-        }
-    }
-    
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool,
-                            previousViewControllers: [UIViewController], transitionCompleted completed: Bool)
-    {
-        let page = self.viewControllers!.first as! OnboardingPage
-        self.onNew(page: page)
-    }
-    
-    
-    // MARK: UIPageViewControllerDataSource
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            viewControllerBefore viewController: UIViewController) -> UIViewController?
-    {
-        guard let currentPageIndex = self.index(of: viewController) else { return nil }
-        
-        return self.pageAt(index: currentPageIndex - 1)
-    }
-    
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            viewControllerAfter viewController: UIViewController) -> UIViewController?
-    {
-        guard let currentPageIndex = self.index(of: viewController) else { return nil }
-        
-        return self.pageAt(index: currentPageIndex + 1)
     }
 }

@@ -12,6 +12,7 @@ class OnboardingPage4 : OnboardingPage
     
     override func startAnimations()
     {
+        self.onboardingPageViewController.allowsSwipe = false
         self.notificationSubscription =
             self.notificationAuthorizationObservable
                 .subscribe(onNext: { wasSet in
@@ -19,6 +20,7 @@ class OnboardingPage4 : OnboardingPage
                     guard wasSet else { return }
                     
                     self.notificationSubscription?.dispose()
+                    self.onboardingPageViewController.allowsSwipe = true
                     self.finish()
                 })
         

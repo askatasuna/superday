@@ -12,6 +12,7 @@ class OnboardingPage3 : OnboardingPage, CLLocationManagerDelegate
     
     override func startAnimations()
     {
+        self.onboardingPageViewController.allowsSwipe = false
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -25,7 +26,7 @@ class OnboardingPage3 : OnboardingPage, CLLocationManagerDelegate
             {
                 self.settingsService.setAllowedLocationPermission()
             }
-            
+            self.onboardingPageViewController.allowsSwipe = true
             self.finish()
         }
     }
