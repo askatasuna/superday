@@ -29,4 +29,10 @@ class OnboardingPage3 : OnboardingPage, CLLocationManagerDelegate
             self.finish()
         }
     }
+    
+    override func appBecameActive() {
+        if !self.settingsService.hasLocationPermission {
+            locationManager.requestAlwaysAuthorization()
+        }
+    }
 }

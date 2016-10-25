@@ -22,6 +22,16 @@ class OnboardingPage4 : OnboardingPage
                     self.finish()
                 })
         
+        self.requestNotificationPermission()
+    }
+    
+    override func appBecameActive() {
+        if !self.settingsService.hasNotificationPermission {
+            self.requestNotificationPermission()
+        }
+    }
+    
+    private func requestNotificationPermission() {
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge ], categories: nil)
         UIApplication.shared.registerUserNotificationSettings(notificationSettings)
     }
