@@ -98,7 +98,8 @@ class OnboardingPageViewController: UIViewController
         guard let _ = self.pageAt(index: currentPageIndex + 1) else
         {
             self.settingsService.setInstallDate(Date())
-            self.present(self.mainViewController, animated: false)
+            self.mainViewController.modalTransitionStyle = .crossDissolve
+            self.present(self.mainViewController, animated: true)
             return
         }
         self.scrollView.setContentOffset(self.contentOffset(for: self.currentPageIndex + 1),
