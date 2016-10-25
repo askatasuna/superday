@@ -6,6 +6,9 @@ import CoreGraphics
 class TimelineViewController : UITableViewController
 {
     // MARK: Fields
+    private var editingIndex = -1
+    private var hasInitialized = false
+    
     private static let baseCellHeight = 40
     private let disposeBag = DisposeBag()
     private let viewModel : TimelineViewModel
@@ -68,11 +71,15 @@ class TimelineViewController : UITableViewController
     {
         self.tableView.reloadData()
         
-        let scrollIndexPath = IndexPath(row: viewModel.timeSlots.count, section: 0)
-        let updateIndexPath = IndexPath(row: viewModel.timeSlots.count - 1, section: 0)
+        let rowAnimation = self.hasInitialized ? UITableViewRowAnimation.top : .none
         
-        self.tableView.reloadRows(at: [updateIndexPath], with: .top)
+        let updateIndexPath = IndexPath(row: viewModel.timeSlots.count - 1, section: 0)
+        self.tableView.reloadRows(at: [updateIndexPath], with: rowAnimation)
+        
+        let scrollIndexPath = IndexPath(row: viewModel.timeSlots.count, section: 0)
         self.tableView.scrollToRow(at: scrollIndexPath, at: .bottom, animated: true)
+        
+        self.hasInitialized = true
     }
     
     private func onIsEditing(isEditing: Bool)
@@ -80,7 +87,11 @@ class TimelineViewController : UITableViewController
         self.tableView.isEditing = isEditing
         self.tableView.isScrollEnabled = !isEditing
         
-        self.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+        if self.tableView.isEditing || self.editingIndex == -1 { return }
+        
+        let indexPath = IndexPath(row: self.editingIndex, section: 0)
+        self.tableView.reloadRows(at: [ indexPath ], with: .fade)
+        self.editingIndex = -1
     }
     
     private func onTimeTick(time: Int)
@@ -88,11 +99,12 @@ class TimelineViewController : UITableViewController
         guard !tableView.isEditing else { return }
         
         let indexPath = IndexPath(row: viewModel.timeSlots.count - 1, section: 0)
-        self.tableView.reloadRows(at: [indexPath], with: .fade)
+        self.tableView.reloadRows(at: [indexPath], with: .none)
     }
     
     private func onCategoryTapped(point: CGPoint, index: Int)
     {
+        self.editingIndex = index
         self.editStateService.notifyEditingBegan(point: point, timeSlot: self.viewModel.timeSlots[index])
     }
     
