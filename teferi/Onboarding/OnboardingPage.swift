@@ -6,6 +6,7 @@ class OnboardingPage : UIViewController
     private(set) var didAppear = false
     private(set) var nextButtonText : String?
     private(set) var settingsService : SettingsService!
+    private(set) var appStateService : AppStateService!
     private(set) var notificationAuthorizationObservable : Observable<Bool>!
     
     var allowPagingSwipe : Bool { return self.nextButtonText != nil }
@@ -18,10 +19,7 @@ class OnboardingPage : UIViewController
         
         self.nextButtonText = nextButtonText
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.appBecameActive),
-                                               name: Notification.Name.UIApplicationDidBecomeActive,
-                                               object: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder)
@@ -35,9 +33,11 @@ class OnboardingPage : UIViewController
     }
     
     func inject(_ settingsService: SettingsService,
+                _ appStateService: AppStateService,
                 _ onboardingPageViewController: OnboardingPageViewController,
                 _ notificationAuthorizationObservable: Observable<Bool>)
     {
+        self.appStateService = appStateService
         self.settingsService = settingsService
         self.onboardingPageViewController = onboardingPageViewController
         self.notificationAuthorizationObservable = notificationAuthorizationObservable

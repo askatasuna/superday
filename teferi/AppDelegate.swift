@@ -86,6 +86,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
             
             initialViewController =
                 onboardController.inject(settingsService,
+                                         appStateService,
                                          mainViewController,
                                          notificationAuthorizationVariable.asObservable())
             
