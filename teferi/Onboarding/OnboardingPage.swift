@@ -7,7 +7,7 @@ class OnboardingPage : UIViewController
     private(set) var nextButtonText : String?
     private(set) var settingsService : SettingsService!
     private(set) var notificationAuthorizationObservable : Observable<Bool>!
-    
+
     private(set) var onboardingPageViewController : OnboardingPageViewController!
 
     var allowPagingSwipe : Bool { return self.nextButtonText != nil }
