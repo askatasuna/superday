@@ -64,6 +64,11 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         return self
     }
     
+    func isCurrent(page: OnboardingPage) -> Bool
+    {
+        return page == self.viewControllers?.first
+    }
+    
     private func startLaunchAnimation()
     {
         //Small delay to give launch screen time to fade away

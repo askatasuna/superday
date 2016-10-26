@@ -10,18 +10,28 @@ class OnboardingPage : UIViewController
     
     var allowPagingSwipe : Bool { return self.nextButtonText != nil }
     
-    private var onboardingPageViewController : OnboardingPageViewController!
+    private(set) var onboardingPageViewController : OnboardingPageViewController!
     
     init?(coder aDecoder: NSCoder, nextButtonText: String?)
     {
         super.init(coder: aDecoder)
         
         self.nextButtonText = nextButtonText
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.appBecameActive),
+                                               name: Notification.Name.UIApplicationDidBecomeActive,
+                                               object: nil)
     }
     
     required init?(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit
+    {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func inject(_ settingsService: SettingsService,
@@ -51,7 +61,7 @@ class OnboardingPage : UIViewController
         // override in page
     }
     
-    func appBecameActive()
+    @objc func appBecameActive()
     {
         // override in page
     }
