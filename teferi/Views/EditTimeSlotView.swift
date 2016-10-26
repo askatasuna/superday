@@ -140,4 +140,11 @@ class EditTimeSlotView : UIView
         
         return imageView
     }
+    
+    // for hacky onboarding animations
+    func getIcon(forCategory category: Category) -> UIImageView?
+    {
+        let color = category.color
+        return self.editButtons?.first(where: { (b) in b.backgroundColor == color })
+    }
 }

@@ -26,7 +26,7 @@ func animateLayer<T : CALayer>(
         return;
     }
     
-    Timer.schedule(withDelay: delay) { timer in
+    Timer.schedule(withDelay: delay) {
         animateLayerImpl(layer, duration: duration, timingFunction: timingFunction, animation: animation, properties: properties)
     }
 }
