@@ -31,7 +31,7 @@ class OnboardingPage3 : OnboardingPage, CLLocationManagerDelegate
     }
     
     override func appBecameActive() {
-        if !self.settingsService.hasLocationPermission {
+        if self.onboardingPageViewController.isCurrent(page: self) &&		 !self.settingsService.hasLocationPermission {
             locationManager.requestAlwaysAuthorization()
         }
     }

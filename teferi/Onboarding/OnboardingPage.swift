@@ -8,7 +8,7 @@ class OnboardingPage : UIViewController
     private(set) var settingsService : SettingsService!
     private(set) var notificationAuthorizationObservable : Observable<Bool>!
     
-    private var onboardingPageViewController : OnboardingPageViewController!
+    private(set) var onboardingPageViewController : OnboardingPageViewController!
     
     init?(coder aDecoder: NSCoder, nextButtonText: String?)
     {

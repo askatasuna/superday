@@ -75,6 +75,10 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         }
     }
     
+    func isCurrent(page: OnboardingPage) -> Bool {
+        return page == self.viewControllers?.first
+    }
+    
     func goToNextPage()
     {
         let currentPageIndex = self.index(of: self.viewControllers!.first!)!
