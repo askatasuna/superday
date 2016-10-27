@@ -19,9 +19,9 @@ class DefaultTimeSlotCreationServiceTests : XCTestCase
         self.settingsService = MockSettingsService()
         self.persistencyService = MockPersistencyService()
         self.notificationService = MockNotificationService()
-        self.timeSlotCreationService = DefaultTimeSlotCreationService(settingsService: self.settingsService,
+        self.timeSlotCreationService = DefaultTimeSlotCreationService(loggingService: self.loggingService,
+                                                                      settingsService: self.settingsService,
                                                                       persistencyService: self.persistencyService,
-                                                                      loggingService: self.loggingService,
                                                                       notificationService: self.notificationService)
     }
     

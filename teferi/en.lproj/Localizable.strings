@@ -6,3 +6,5 @@
 
 "LocationDisabledTitle" = "Oops! Your location is disabled.";
 "LocationDisabledDescription" = "We use your location to magically guess & track your activities. 🤘";
+
+"NotificationText" = "I'm so excited to hear what you're doing right now. Would you please tell me?";

@@ -15,6 +15,9 @@
 		240AC7201D748C8800F21F4F /* teferi.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 240AC71E1D748C8800F21F4F /* teferi.xcdatamodeld */; };
 		240AC7221D748C8800F21F4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 240AC7211D748C8800F21F4F /* Assets.xcassets */; };
 		24116A041D9DACCD00762BD6 /* AnimationHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24116A031D9DACCD00762BD6 /* AnimationHelpers.swift */; };
+		24168E371DC21042004F90AD /* DefaultTimeSlotCreationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24168E361DC21042004F90AD /* DefaultTimeSlotCreationServiceTests.swift */; };
+		24168E3A1DC21125004F90AD /* MockLoggingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24168E381DC21125004F90AD /* MockLoggingService.swift */; };
+		24168E3B1DC21125004F90AD /* MockNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24168E391DC21125004F90AD /* MockNotificationService.swift */; };
 		2420A8661DB56B5500C0478C /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2420A8651DB56B5500C0478C /* EmptyStateView.swift */; };
 		2420A8681DB56B6800C0478C /* EmptyStateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2420A8671DB56B6800C0478C /* EmptyStateView.xib */; };
 		2420A86A1DB6271000C0478C /* EditTimeSlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2420A8691DB6271000C0478C /* EditTimeSlotView.swift */; };
@@ -119,6 +122,9 @@
 		240AC7211D748C8800F21F4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		240AC7261D748C8800F21F4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24116A031D9DACCD00762BD6 /* AnimationHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimationHelpers.swift; path = Helpers/AnimationHelpers.swift; sourceTree = "<group>"; };
+		24168E361DC21042004F90AD /* DefaultTimeSlotCreationServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultTimeSlotCreationServiceTests.swift; path = Services/DefaultTimeSlotCreationServiceTests.swift; sourceTree = "<group>"; };
+		24168E381DC21125004F90AD /* MockLoggingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockLoggingService.swift; path = Mocks/MockLoggingService.swift; sourceTree = "<group>"; };
+		24168E391DC21125004F90AD /* MockNotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockNotificationService.swift; path = Mocks/MockNotificationService.swift; sourceTree = "<group>"; };
 		2420A8651DB56B5500C0478C /* EmptyStateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmptyStateView.swift; path = Views/EmptyStateView.swift; sourceTree = "<group>"; };
 		2420A8671DB56B6800C0478C /* EmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EmptyStateView.xib; path = Views/EmptyStateView.xib; sourceTree = "<group>"; };
 		2420A8691DB6271000C0478C /* EditTimeSlotView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditTimeSlotView.swift; path = Views/EditTimeSlotView.swift; sourceTree = "<group>"; };
@@ -273,6 +279,14 @@
 			name = ViewModels;
 			sourceTree = "<group>";
 		};
+		24168E351DC21038004F90AD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				24168E361DC21042004F90AD /* DefaultTimeSlotCreationServiceTests.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		2421F8C11D9BAC4A00AF8857 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +332,8 @@
 		24874DE41D7C3FC40099DC1F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				24168E381DC21125004F90AD /* MockLoggingService.swift */,
+				24168E391DC21125004F90AD /* MockNotificationService.swift */,
 				24B03B621D9E946900452D16 /* MockMetricsService.swift */,
 				24564F6F1D83270000D9A8AE /* MockLocationService.swift */,
 				247F05FD1D88153700451BAD /* MockPersistencyService.swift */,
@@ -330,6 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				24564F401D82FDBB00D9A8AE /* Extensions */,
+				24168E351DC21038004F90AD /* Services */,
 				2414EB981D7DC8D1001EFB6D /* ViewModels */,
 				24564F7B1D83891100D9A8AE /* Views */,
 				24874DE41D7C3FC40099DC1F /* Mocks */,
@@ -949,8 +966,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				24564F701D83270000D9A8AE /* MockLocationService.swift in Sources */,
+				24168E3A1DC21125004F90AD /* MockLoggingService.swift in Sources */,
+				24168E371DC21042004F90AD /* DefaultTimeSlotCreationServiceTests.swift in Sources */,
 				24B03B631D9E946900452D16 /* MockMetricsService.swift in Sources */,
 				24564F6E1D8326F100D9A8AE /* TimelineViewModelTests.swift in Sources */,
+				24168E3B1DC21125004F90AD /* MockNotificationService.swift in Sources */,
 				24B03B5F1D9E5BB900452D16 /* PagerViewModelTests.swift in Sources */,
 				24564F7D1D83893900D9A8AE /* TimelineCellTests.swift in Sources */,
 				247F05FE1D88153700451BAD /* MockPersistencyService.swift in Sources */,

@@ -34,9 +34,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         self.persistencyService = CoreDataPersistencyService(loggingService: self.loggingService)
         self.notificationService = DefaultNotificationService(loggingService: self.loggingService)
         self.timeSlotCreationService =
-            DefaultTimeSlotCreationService(settingsService: self.settingsService,
+            DefaultTimeSlotCreationService(loggingService: self.loggingService,
+                                           settingsService: self.settingsService,
                                            persistencyService: self.persistencyService,
-                                           loggingService: self.loggingService,
                                            notificationService: self.notificationService)
     }
     
@@ -51,10 +51,12 @@ class AppDelegate : UIResponder, UIApplicationDelegate
             .subscribe(onNext: self.timeSlotCreationService.onNewLocation)
             .addDisposableTo(disposeBag)
         
-        self.locationService.startLocationTracking()
-        
         //Faster startup when the app wakes up for location updates
-        if isInBackground { return true }
+        if isInBackground
+        {
+            self.locationService.startLocationTracking()
+            return true
+        }
         
         self.initializeWindowIfNeeded()
         
@@ -122,6 +124,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         self.appStateService.currentAppState = .active
         self.initializeWindowIfNeeded()
+        self.locationService.stopLocationTracking()
         self.notificationService.unscheduleAllNotifications()
     }
     
